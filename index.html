@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<script>
+  /* Nattläge, samma som på Norvay: sätts innan sidan ritas. Utan sparat val följer sidan enhetens inställning.
+     Valet sparas i kakan "norvay-tema" (bara light eller dark) för hela norvayapp.se, så att det följer med
+     mellan Norvays verktyg. Ett äldre val i localStorage läses fortfarande. */
+  (function(){var t,m=document.cookie.match(/(?:^|; )norvay-tema=(light|dark)/);if(m)t=m[1];if(!t){try{t=localStorage.getItem('norvay-tema')}catch(e){}}if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Utkast under granskning: sidan ska inte synas i Google ännu. Ta bort raden när appen lanseras. -->
+<meta name="robots" content="noindex, nofollow">
+<title>Elevhälsoguiden – utkast | Norvay</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23f5f3ec' stroke='%23123f37' stroke-width='1.5'/%3E%3Ctext x='16' y='21' font-family='Georgia,serif' font-size='15' text-anchor='middle' fill='%23123f37'%3EN%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Elevhälsoguiden från Norvay: vad elevhälsan är, vem som gör vad och stöd för kurator, skolsköterska, skolpsykolog, specialpedagog, rektor och vårdnadshavare.">
+<style>
+/* Lokala typsnitt (inga anrop till Google). Saknas mappen fonts används systemets typsnitt. */
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/dm-sans-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/dm-sans-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/dm-sans-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/newsreader-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Newsreader';font-style:italic;font-weight:400;font-display:swap;src:url(/fonts/newsreader-latin-400-italic.woff2) format('woff2')}
+
+/* Norvay-listen (samma som i alla Norvay-appar) */
+body{margin:0;}
+.norvay-bar, .norvay-bar * { margin:0; text-transform:none; font-style:normal; } .norvay-bar { box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%; min-height:44px; padding:8px 20px; background:#f5f3ec; border-bottom:1px solid rgba(18,63,55,0.14); font-family:'DM Sans',system-ui,sans-serif; font-size:14px; line-height:1.2; } .norvay-bar a { color:#123f37; text-decoration:none; } .norvay-bar a:hover { text-decoration:underline; text-underline-offset:3px; } .norvay-bar a:focus-visible { outline:3px solid #2f6b5a; outline-offset:3px; border-radius:6px; } .norvay-bar-back { font-weight:500; } .norvay-bar-brand { display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:12px; letter-spacing:0.2em; } .norvay-bar-mark { width:24px; height:24px; border:1.5px solid #123f37; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-size:13px; letter-spacing:0; } @media print { .norvay-bar { display:none !important; } }
+.norvay-bar-right{display:inline-flex;align-items:center;gap:12px}
+/* Månknappen: samma som på Norvays startsida (40 px, rund, ikon 18 px) */
+.n-theme{width:40px;height:40px;flex:0 0 40px;border-radius:50%;border:1px solid rgba(18,63,55,.14);background:transparent;color:#123f37;display:inline-grid;place-items:center;cursor:pointer;padding:0;transition:border-color .3s ease,color .3s ease}
+.n-theme:hover{border-color:#c9785f;color:#c9785f}
+.n-theme:focus-visible{outline:3px solid #2f6b5a;outline-offset:3px}
+.n-theme svg{width:18px;height:18px}
+/* Större tryckytor i listen på mobil (minst 44 px höga länkar) */
+.norvay-bar{padding-top:0;padding-bottom:0}
+.norvay-bar a{display:inline-flex;align-items:center;min-height:44px}
+
+/* ---------- Norvay-temat ---------- */
+:root{
+  --n-bg:#f5f3ec; --n-surface:#ffffff; --n-ink:#123f37; --n-ink-soft:#4f6b63; --n-line:rgba(18,63,55,.14);
+  --n-terracotta:#a4533c; --n-terracotta-soft:#c9785f;
+  --n-accent:#2f6b5a; --n-tint:#d7e2d7; --n-on-accent:#ffffff;
+  --n-warn-bg:#f6e4dd;
+  --n-radius:20px; --n-radius-sm:12px;
+  --n-font-display:'Newsreader',Georgia,'Times New Roman',serif;
+  --n-font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --n-bg:#0f2a24; --n-surface:#163731; --n-ink:#ece7da; --n-ink-soft:#a9bdb5; --n-line:rgba(236,231,218,.14);
+  --n-terracotta:#e3a58f; --n-terracotta-soft:#d08a72;
+  --n-accent:#8fc2a8; --n-tint:#1f4239; --n-on-accent:#0f2a24;
+  --n-warn-bg:#3b2a24;
+}
+:root[data-theme="dark"] .norvay-bar{background:#0f2a24;border-bottom-color:rgba(236,231,218,.14)}
+:root[data-theme="dark"] .norvay-bar a{color:#ece7da}
+:root[data-theme="dark"] .norvay-bar-mark{border-color:#ece7da}
+:root[data-theme="dark"] .n-theme{color:#ece7da;border-color:rgba(236,231,218,.14)}
+:root[data-theme="dark"] .n-theme:hover{border-color:#e3a58f;color:#e3a58f}
+:root[data-theme="dark"] .n-theme:focus-visible{outline-color:#8fc2a8}
+
+[data-tone="sage"]{--t-bg:#dfe9df;--t-deep:#2f6b5a}
+[data-tone="sand"]{--t-bg:#f0e5d1;--t-deep:#8a5a1f}
+[data-tone="lila"]{--t-bg:#e7e2ef;--t-deep:#6f5f8f}
+[data-tone="blush"]{--t-bg:#f4e1d8;--t-deep:#a4533c}
+[data-tone="dimma"]{--t-bg:#e0e8ec;--t-deep:#3f5f6e}
+:root[data-theme="dark"] [data-tone="sage"]{--t-bg:#1f4239;--t-deep:#8fc2a8}
+:root[data-theme="dark"] [data-tone="sand"]{--t-bg:#3a3123;--t-deep:#e0c08f}
+:root[data-theme="dark"] [data-tone="lila"]{--t-bg:#2f2b3f;--t-deep:#c3b6e0}
+:root[data-theme="dark"] [data-tone="blush"]{--t-bg:#3b2a24;--t-deep:#e3a58f}
+:root[data-theme="dark"] [data-tone="dimma"]{--t-bg:#22343c;--t-deep:#a9c6d4}
+
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+.n-body{margin:0;background:var(--n-bg);color:var(--n-ink);font-family:var(--n-font-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.n-body *,.n-body *::before,.n-body *::after{box-sizing:border-box}
+.n-body :focus-visible{outline:3px solid var(--n-accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:820px;margin:0 auto;padding:0 20px}
+a{color:inherit}
+.n-h{font-family:var(--n-font-display);font-weight:400;letter-spacing:-.01em;line-height:1.12;margin:0 0 14px}
+.n-h1{font-size:clamp(2.5rem,6.4vw,4rem)}
+.n-h2{font-size:clamp(1.9rem,4.4vw,2.6rem)}
+.n-h3{font-size:1.3rem;line-height:1.25}
+.n-h em{font-style:italic;color:var(--n-terracotta)}
+.lead{font-size:1.1rem;max-width:62ch;margin:0 0 8px}
+.small{font-size:.9rem;color:var(--n-ink-soft)}
+
+.n-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:1rem;font-weight:500;padding:10px 20px;min-height:44px;border-radius:999px;border:1px solid var(--n-accent);background:var(--n-accent);color:var(--n-on-accent);cursor:pointer;text-decoration:none}
+.n-btn:hover{background:var(--n-ink);border-color:var(--n-ink);color:var(--n-bg)}
+.n-btn--ghost{background:transparent;color:var(--n-accent)}
+.n-btn--ghost:hover{background:var(--n-tint);color:var(--n-ink);border-color:var(--n-accent)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:20px}
+
+/* Utkastremsan */
+.draft{margin:18px 0 0;background:var(--n-warn-bg);border-left:5px solid var(--n-terracotta);border-radius:var(--n-radius-sm);padding:12px 16px;font-size:.95rem}
+.draft strong{color:var(--n-terracotta)}
+
+/* Flikarna längst upp */
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:16px 0 6px;margin:0 -20px;padding-left:20px;padding-right:20px;scrollbar-width:thin}
+.tabs a{flex:none;font-size:.92rem;font-weight:500;text-decoration:none;color:var(--n-ink);background:var(--n-surface);border:1px solid var(--n-line);border-radius:999px;padding:8px 16px;min-height:40px;display:inline-flex;align-items:center;white-space:nowrap}
+.tabs a:hover{border-color:var(--n-accent)}
+.tabs a[aria-current="page"]{background:var(--n-accent);border-color:var(--n-accent);color:var(--n-on-accent)}
+
+/* Startsidan */
+.hero{padding:34px 0 18px}
+.hero-circle{display:block;width:96px;height:auto;margin:0 0 16px -4px}
+.hero-for{color:var(--n-ink-soft);margin:0 0 8px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:8px 0 28px}
+.card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;font:inherit;color:inherit;cursor:pointer;background:var(--t-bg,var(--n-surface));border:1px solid transparent;border-radius:var(--n-radius);padding:20px 22px;transition:border-color .15s,transform .15s;text-decoration:none}
+.card:hover{border-color:var(--t-deep,var(--n-accent));transform:translateY(-2px)}
+.card .badge{width:44px;height:44px;border-radius:50%;background:var(--n-surface);color:var(--t-deep,var(--n-accent));display:inline-flex;align-items:center;justify-content:center;font-family:var(--n-font-display);font-size:1.1rem;margin-bottom:6px}
+.card .t{font-family:var(--n-font-display);font-size:1.4rem;line-height:1.2}
+.card .s{font-size:.93rem;color:var(--n-ink-soft)}
+.card.wide{grid-column:1/-1}
+.card.featured{background:var(--n-accent);color:var(--n-on-accent)}
+.card.featured .s{color:var(--n-on-accent);opacity:.9}
+.card.featured .badge{color:var(--n-accent)}
+.who{font-family:var(--n-font-display);font-weight:400;font-size:1.6rem;margin:22px 0 4px}
+.note{background:var(--n-surface);border:1px solid var(--n-line);border-radius:var(--n-radius);padding:18px 22px;margin:0 0 18px;font-size:.95rem}
+.note p{margin:0 0 6px}
+.note p:last-child{margin:0}
+.sources{margin:6px 0 0;padding-left:20px;font-size:.92rem;color:var(--n-ink-soft)}
+.sources li{margin:3px 0}
+
+/* Avsnitt */
+.sec-head{background:var(--t-bg);border-radius:var(--n-radius);padding:26px 26px 22px;margin-top:14px}
+.sec-head .badge{width:46px;height:46px;border-radius:50%;background:var(--n-surface);color:var(--t-deep);display:inline-flex;align-items:center;justify-content:center;font-family:var(--n-font-display);font-size:1.1rem;margin-bottom:10px}
+.sec-head .n-h2{color:var(--t-deep)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
+.toc button{font:inherit;font-size:.88rem;font-weight:500;color:var(--n-ink);background:var(--n-surface);border:1px solid var(--n-line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.toc button:hover{border-color:var(--n-accent)}
+.blocks{display:grid;gap:14px;margin-top:18px}
+.block{background:var(--n-surface);border:1px solid var(--n-line);border-radius:var(--n-radius);padding:22px 24px}
+.block h2{font-family:var(--n-font-display);font-weight:400;font-size:1.35rem;line-height:1.25;margin:0 0 10px}
+.block p{margin:0 0 10px;max-width:66ch}
+.block p:last-child{margin-bottom:0}
+.block ul,.block ol{margin:0;padding-left:22px}
+.block li{margin:6px 0;max-width:64ch}
+.block.warn{background:var(--n-warn-bg);border-color:transparent;border-left:5px solid var(--n-terracotta)}
+.block.warn h2{color:var(--n-terracotta)}
+.block.tip{background:var(--n-tint);border-color:transparent}
+/* Vem gör vad */
+.who-list{margin:0;display:grid;gap:10px}
+.who-list div{border-top:1px solid var(--n-line);padding-top:10px}
+.who-list div:first-child{border-top:0;padding-top:0}
+.who-list dt{font-weight:600}
+.who-list dd{margin:2px 0 0;max-width:64ch;color:var(--n-ink-soft)}
+
+/* Granskning */
+.review{margin-top:22px;background:var(--n-surface);border:2px dashed var(--n-accent);border-radius:var(--n-radius);padding:22px 24px}
+.review h2{font-family:var(--n-font-display);font-weight:400;font-size:1.35rem;margin:0 0 8px}
+.review ol{margin:0 0 12px;padding-left:22px}
+.review li{margin:6px 0;max-width:64ch}
+
+.n-footer{border-top:1px solid var(--n-line);padding:28px 0 44px;margin-top:56px;font-size:.92rem;color:var(--n-ink-soft)}
+.n-footer p{margin:0 0 .8em;max-width:70ch}
+.n-footer a{color:var(--n-accent)}
+/* Knappen "Stöd Norvay" i Norvay-listen: samma som på startsidan, direkt till vänster om månknappen. På mobil bara hjärtat (skärmläsare läser fortfarande "Stöd Norvay"). */
+.norvay-bar a.norvay-bar-stod{position:relative;display:inline-flex;align-items:center;min-height:0;gap:6px;padding:8px 16px;border-radius:999px;background:#123f37;color:#f5f3ec;font-weight:700;white-space:nowrap;transition:background-color .2s ease}
+.norvay-bar a.norvay-bar-stod::after{content:"";position:absolute;inset:-6px 0}
+.norvay-bar a.norvay-bar-stod:hover{background:#0f362f;color:#f5f3ec;text-decoration:none}
+.norvay-bar a.norvay-bar-stod:focus-visible{outline:3px solid #2f6b5a;outline-offset:3px;border-radius:999px}
+.norvay-bar-stod svg{width:15px;height:15px;flex:0 0 15px}
+:root[data-theme="dark"] .norvay-bar a.norvay-bar-stod{background:#8fc2a8;color:#0f2a24}
+:root[data-theme="dark"] .norvay-bar a.norvay-bar-stod:hover{background:#7aa58f;color:#0f2a24}
+:root[data-theme="dark"] .norvay-bar a.norvay-bar-stod:focus-visible{outline-color:#8fc2a8}
+@media (max-width:480px){.norvay-bar a.norvay-bar-stod{padding:9px}.norvay-bar-stod span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+@media (prefers-reduced-motion:reduce){.norvay-bar a.norvay-bar-stod{transition:none}}
+@media print{.norvay-bar-stod{display:none!important}}
+
+@media (prefers-reduced-motion:reduce){ .n-body *{transition:none!important;animation:none!important} }
+@media print{
+  :root,:root[data-theme="dark"]{--n-bg:#fff;--n-surface:#fff;--n-ink:#000;--n-ink-soft:#333;--n-line:#ccc;--n-tint:#eee;--n-accent:#000;--n-on-accent:#fff;--n-warn-bg:#fff}
+  .n-theme,.tabs,.actions,.toc,.n-footer,.review,.no-print{display:none!important}
+  .block{break-inside:avoid}
+}
+</style>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="2e81b730-fb1d-4183-9323-de51c8949318" data-tag="elevhalsoguiden" data-do-not-track="true"></script>
+</head>
+<body class="n-body">
+<div class="norvay-bar"><a class="norvay-bar-back" href="https://norvayapp.se/#verktyg">← Alla verktyg</a><span class="norvay-bar-right"><a class="norvay-bar-brand" href="https://norvayapp.se/" aria-label="Norvay startsida"><span class="norvay-bar-mark">N</span><span>NORVAY</span></a><a class="norvay-bar-stod" href="https://norvayapp.se/#stod" target="_blank" rel="noopener" aria-label="Stöd Norvay (öppnas i ny flik)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.760 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span>Stöd Norvay</span></a><button class="n-theme" id="themeBtn" type="button"></button></span></div>
+
+<div class="wrap">
+  <p class="draft" role="note"><strong>Utkast under granskning.</strong> Texterna granskas just nu av personer från varje yrke i elevhälsan och kan innehålla fel. Använd dem inte som underlag ännu.</p>
+  <nav class="tabs" id="tabs" aria-label="Delar i Elevhälsoguiden"></nav>
+  <main id="app"></main>
+  <footer class="n-footer">
+    <p>Elevhälsoguiden sparar ingenting av det du gör. Ingen AI används. Vi räknar bara anonyma besök, utan kakor.</p>
+    <p>Elevhälsoguiden ger en överblick och ersätter inte din huvudmans rutiner, medicinsk rådgivning eller juridisk rådgivning.</p>
+    <p>Ett verktyg från <a href="https://norvayapp.se">Norvay</a> · <a href="https://norvayapp.se/integritet">Integritet</a> · <a href="mailto:kontakt@norvayapp.se">kontakt@norvayapp.se</a>. Skicka aldrig elevuppgifter via mejl.</p>
+  </footer>
+</div>
+
+<script>
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* Synpunkter skickas hit via knappen längst ner i varje del */
+const FEEDBACK_MAIL = 'norvayapp@gmail.com';
+
+/* ==========================================================
+   INNEHÅLL
+   Varje del består av block:
+   {h, p}            rubrik och stycke
+   {h, list:[...]}   punktlista   {h, steps:[...]} numrerad lista
+   {h, who:[[rubrik, text], ...]}  lista med rubrik och förklaring
+   type:'warn'       viktig ruta  type:'tip' tipsruta
+   review:[...]      frågor till granskaren för den här delen
+   ========================================================== */
+const SECTIONS = [
+  { id:'grund', title:'Om elevhälsan', short:'Om elevhälsan', badge:'Eh', tone:'sage',
+    card:'Vad elevhälsan är, hur den är uppbyggd och vem som gör vad. För alla.',
+    lead:'Grunden för alla: vad elevhälsan är, hur den är uppbyggd och vem du vänder dig till med vad.',
+    blocks:[
+      {h:'Vad är elevhälsan?', p:'Enligt 2 kap. 25 § skollagen ska det finnas elevhälsa för eleverna i förskoleklass, grundskola, anpassad grundskola, specialskola, sameskola, gymnasieskola och anpassad gymnasieskola. Elevhälsan ska omfatta medicinska, psykologiska, psykosociala och specialpedagogiska insatser. Eleverna ska ha tillgång till skolläkare, skolsköterska, psykolog och kurator, och det ska finnas personal med kompetens för specialpedagogiska insatser.'},
+      {h:'Uppdraget', p:'Elevhälsan ska främst arbeta förebyggande och hälsofrämjande. Den ska stödja elevernas utveckling mot utbildningens mål. Elevhälsan finns alltså inte bara för elever som redan har det svårt, utan för att skolan ska vara en plats där alla elever kan må bra och lära sig.'},
+      {h:'Främjande, förebyggande och åtgärdande', list:[
+        'Främjande arbete stärker det som gör att elever mår bra och lär sig, till exempel trygga relationer, delaktighet och ett gott klimat. Det riktar sig till alla.',
+        'Förebyggande arbete minskar risker innan problem uppstår, till exempel insatser mot kränkningar eller tidiga signaler om frånvaro.',
+        'Åtgärdande arbete sätts in när en elev eller en grupp redan har svårigheter.']},
+      {h:'Tre nivåer', list:[
+        'Individnivå: stöd till enskilda elever.',
+        'Gruppnivå: klassklimat, kamratrelationer och insatser i grupp.',
+        'Skolnivå: skolans rutiner, lärmiljö, trygghetsarbete och närvaroarbete.']},
+      {h:'Vem gör vad?', who:[
+        ['Skolsköterska och skolläkare','Den medicinska insatsen: hälsobesök, vaccinationer, hälsosamtal och medicinska bedömningar.'],
+        ['Skolpsykolog','Den psykologiska insatsen: psykologiska bedömningar och utredningar, konsultation och stöd i frågor om psykisk hälsa och lärande.'],
+        ['Skolkurator','Den psykosociala insatsen: stödsamtal, psykosociala kartläggningar och samverkan med hem, socialtjänst och andra aktörer.'],
+        ['Specialpedagog och speciallärare','Den specialpedagogiska insatsen: kartläggning av lärande och lärmiljö, stöd till lärare och arbete med anpassningar och särskilt stöd.'],
+        ['Rektor','Leder elevhälsoarbetet på skolan och fattar beslut, till exempel om åtgärdsprogram.']]},
+      {h:'Vart vänder man sig?', who:[
+        ['Eleven har ofta ont i magen eller huvudet','Skolsköterskan.'],
+        ['Eleven är ledsen, har konflikter eller det är oroligt hemma','Kuratorn.'],
+        ['Eleven har svårt att lära sig, till exempel att läsa eller räkna','Mentorn först, sedan specialpedagogen.'],
+        ['Det behövs en bedömning av elevens förutsättningar för lärande','Skolpsykologen, via elevhälsoteamet.'],
+        ['Det behövs ett beslut om särskilt stöd','Rektor.']],
+        p2:'Oftast börjar det hos mentorn eller läraren, som sedan tar hjälp av elevhälsan.'},
+      {h:'Elevhälsoteamet (EHT)', p:'På de flesta skolor träffas rektor och elevhälsans personal regelbundet i ett elevhälsoteam. Där planeras det främjande och förebyggande arbetet, och där tas ärenden om elever och grupper upp. Studie- och yrkesvägledaren deltar ofta, men ingår inte i elevhälsan enligt skollagen.'},
+      {h:'Sekretess i elevhälsan', p:'I kommunala skolor gäller sekretess för uppgifter om elevers personliga förhållanden i elevhälsan. För den medicinska och den psykologiska insatsen gäller hälso- och sjukvårdssekretess (25 kap. 1 § offentlighets- och sekretesslagen). För den psykosociala och den specialpedagogiska insatsen gäller 23 kap. 2 § samma lag. I fristående skolor gäller tystnadsplikt i stället. Sekretessen gäller även mellan elevhälsans yrken och mot övrig personal, så det som delas ska behövas för att eleven ska få stöd.'},
+      {h:'Hälso- och sjukvård i skolan', p:'Den medicinska och den psykologiska insatsen är hälso- och sjukvård. Där gäller hälso- och sjukvårdslagen och patientdatalagen, med krav på bland annat journalföring och ett ledningssystem för patientsäkerhet.'},
+      {type:'tip', h:'Läs mer', list:[
+        'Skollagen (2010:800), 2 kap. 25 §.',
+        'Vägledning för elevhälsan, Skolverket och Socialstyrelsen.',
+        'Offentlighets- och sekretesslagen (2009:400).']}
+    ],
+    review:['Stämmer beskrivningen av elevhälsan och hur den är uppbyggd?','Är "Vem gör vad?" och "Vart vänder man sig?" rätt och tydligt?','Vad saknas i grunden som alla borde veta om elevhälsan?']
+  },
+
+  { id:'kurator', title:'Skolkurator', short:'Kurator', badge:'Ku', tone:'dimma',
+    card:'Den psykosociala insatsen: samtal, kartläggning och samverkan.',
+    lead:'Kuratorns uppdrag i elevhälsan, vanliga situationer och samverkan med de andra yrkena.',
+    blocks:[
+      {h:'Uppdraget', p:'Kuratorn står för det psykosociala perspektivet: hur elevens situation i skolan, hemma och bland kamrater påverkar mående och lärande. Grunden är socialt arbete, men arbetsplatsen är skolan, där elevernas lärande står i centrum.'},
+      {h:'Det här ingår ofta', list:[
+        'Stödsamtal och krissamtal med elever, enskilt eller i grupp.',
+        'Psykosociala kartläggningar, till exempel vid hög frånvaro eller inför ett åtgärdsprogram.',
+        'Främjande och förebyggande arbete, som trygghetsarbete och insatser i klasser.',
+        'Konsultation till lärare och mentorer.',
+        'Samverkan med vårdnadshavare, socialtjänst, BUP och ungdomsmottagning.']},
+      {h:'Det här ingår inte', list:[
+        'Behandling och terapi. Längre behandling ges av vården.',
+        'Disciplinära beslut. De är rektors ansvar.',
+        'Att utreda om ett barn far illa. Det gör socialtjänsten.']},
+      {h:'Vanliga situationer', list:[
+        'En elev mår dåligt, har konflikter eller är utsatt för kränkningar.',
+        'Hög frånvaro där orsakerna behöver kartläggas.',
+        'Oro för att en elev far illa, som kan leda till en orosanmälan.',
+        'En kris i en klass, till exempel efter ett dödsfall.']},
+      {type:'warn', h:'Orosanmälan', p:'Alla som arbetar i skolan är skyldiga att genast anmäla till socialnämnden om de misstänker att ett barn far illa (19 kap. 1 § socialtjänstlagen, 2025:400). Kuratorn är ofta den som stöttar kollegor i det, men skyldigheten är personlig och gäller alla.'},
+      {h:'Samverkan i elevhälsan', list:[
+        'Med skolsköterskan, när psykiska och kroppsliga besvär hänger ihop.',
+        'Med skolpsykologen, när en elev kan behöva en psykologisk bedömning eller remiss till vården.',
+        'Med specialpedagogen, när svårigheter i lärandet påverkar måendet.',
+        'Med rektor, vid kränkningar, frånvaro och beslut om stöd.']},
+      {type:'tip', h:'Läs mer', list:[
+        'Skollagen, 2 kap. 25 §.',
+        'Kompetensbeskrivningen för skolkuratorer från Akademikerförbundet SSR och Sveriges Skolkuratorers Förening.',
+        'Nationell handbok för skolkuratorer, Sveriges Skolkuratorers Förening (2026).']}
+    ],
+    review:['Stämmer beskrivningen av kuratorns uppdrag?','Vad saknas som andra i elevhälsan och vårdnadshavare behöver veta om kuratorn?','Vad missförstår andra oftast om kuratorns roll?']
+  },
+
+  { id:'skolskoterska', title:'Skolsköterska och skolläkare', short:'Skolsköterska', badge:'Ss', tone:'blush',
+    card:'Den medicinska insatsen: hälsobesök, vaccinationer och hälsosamtal.',
+    lead:'Elevhälsans medicinska insats: hälsobesök, vaccinationer, hälsosamtal och samverkan med de andra yrkena.',
+    blocks:[
+      {h:'Uppdraget', p:'Skolsköterskan och skolläkaren står för elevhälsans medicinska insats. Arbetet är hälso- och sjukvård och ska främst vara förebyggande och hälsofrämjande. Skolsköterskan träffar alla elever under skoltiden, vilket ger en unik möjlighet att tidigt upptäcka ohälsa.'},
+      {h:'Hälsobesök', p:'Varje elev i grundskolan ska erbjudas minst tre hälsobesök, jämnt fördelade under skoltiden, och i gymnasieskolan minst ett. Vid hälsobesöken ingår allmänna hälsokontroller, och eleverna ska också erbjudas undersökning av syn och hörsel. I vilka årskurser besöken görs bestäms i huvudmannens basprogram.'},
+      {type:'warn', h:'Det nationella basprogrammet', p:'Socialstyrelsen har tagit fram ett nationellt basprogram för elevhälsans medicinska insats. Här ska det stå vad programmet innebär, när det börjar gälla och vad som ingår vid varje besök. [Att fylla i av granskaren.]'},
+      {h:'Vaccinationer', p:'Elevhälsan erbjuder vaccinationer enligt det nationella vaccinationsprogrammet, till exempel mot HPV i årskurs 5. Vårdnadshavarna informeras i förväg och kan tacka nej. Elever som har missat vaccinationer kan erbjudas att komplettera.'},
+      {h:'Öppen mottagning', p:'Eleverna kan söka skolsköterskan för enkla sjukvårdsinsatser och för att prata om sin hälsa. Elevhälsan ersätter inte vårdcentralen, så vid sjukdom hänvisas eleven vidare.'},
+      {h:'Skolläkaren', list:[
+        'Gör medicinska bedömningar, till exempel när en elev har hälsoproblem som påverkar skolgången.',
+        'Bidrar med den medicinska bedömningen i utredningar, till exempel inför mottagande i anpassad grundskola.',
+        'Är ett stöd för skolsköterskan i medicinska frågor.']},
+      {h:'Egenvård i skolan', p:'När en elev behöver hjälp under skoldagen med till exempel läkemedel eller en sjukdom som diabetes, gör hälso- och sjukvården en egenvårdsbedömning. Den avgör vad skolans personal kan hjälpa till med och hur.'},
+      {h:'Vanliga situationer', list:[
+        'En elev har ofta ont i magen eller huvudet, eller sover dåligt.',
+        'Frågor om levnadsvanor: sömn, mat och fysisk aktivitet, och hur de påverkar lärandet.',
+        'Smittsamma sjukdomar och löss i en klass.',
+        'En elev med en kronisk sjukdom eller allergi som behöver en plan för skoldagen.']},
+      {h:'Samverkan i elevhälsan', list:[
+        'Med kuratorn, när kroppsliga besvär kan ha psykosociala orsaker.',
+        'Med skolpsykologen, vid psykisk ohälsa och inför utredningar.',
+        'Med specialpedagogen, när syn, hörsel eller hälsa påverkar lärandet.',
+        'Med rektor, vid frånvaro och när en elev behöver anpassningar.']},
+      {h:'Journal och sekretess', p:'Skolsköterskan och skolläkaren för journal enligt patientdatalagen. I kommunala skolor gäller hälso- och sjukvårdssekretess enligt 25 kap. 1 § offentlighets- och sekretesslagen, även mot övrig personal på skolan.'},
+      {type:'tip', h:'Material att ge vårdnadshavare', list:[
+        '1177 om vanliga hudutslag och barnsjukdomar.',
+        '1177 om huvudlöss och hur man luskammar.',
+        'Råd om sömn, mat och fysisk aktivitet för barn och unga.',
+        'Egenvård hemma: tvätta och plåstra om sår, ta bort stickor, klippa naglar och tvätta händerna.',
+        '[Granskaren fyller på med länkar och material.]']}
+    ],
+    review:['Stämmer det som står om hälsobesök, vaccinationer och skolläkaren?','Vad innebär det nationella basprogrammet, och när börjar det gälla?','Vilka vaccinationer ges i skolan, och i vilka årskurser?','Vilka länkar och vilket material vill du ha med för vårdnadshavare?','Vad missförstår andra oftast om skolsköterskans roll?']
+  },
+
+  { id:'psykolog', title:'Skolpsykolog', short:'Psykolog', badge:'Ps', tone:'lila',
+    card:'Den psykologiska insatsen: bedömningar, utredningar och konsultation.',
+    lead:'Elevhälsans psykologiska insats: bedömningar, utredningar, konsultation och samverkan med de andra yrkena.',
+    blocks:[
+      {h:'Uppdraget', p:'Skolpsykologen står för elevhälsans psykologiska insats. Arbetet är hälso- och sjukvård och utförs av en legitimerad psykolog. Psykologen bidrar med kunskap om hur elever tänker, känner, lär sig och utvecklas, på individ-, grupp- och skolnivå.'},
+      {h:'Det här ingår ofta', list:[
+        'Psykologiska bedömningar och utredningar, till exempel av en elevs kognitiva förutsättningar.',
+        'Den psykologiska bedömningen inför mottagande i anpassad grundskola.',
+        'Konsultation och handledning till lärare och elevhälsans personal.',
+        'Främjande och förebyggande arbete, till exempel kring stress, psykisk hälsa och gruppklimat.',
+        'Kortare stödjande samtal och bedömning av om eleven behöver remitteras vidare till vården.']},
+      {h:'Det här ingår inte', list:[
+        'Längre behandling och terapi. Den ges av vården, till exempel BUP.',
+        'Att ställa alla diagnoser. Vissa utredningar, till exempel av adhd, görs ofta inom vården.']},
+      {h:'Vanliga situationer', list:[
+        'En elev når inte målen trots anpassningar, och man vill förstå varför.',
+        'En lärare behöver stöd i hur en elev eller en grupp kan bemötas.',
+        'Oro för en elevs psykiska hälsa.',
+        'Frågan om en elev kan tillhöra anpassad grundskolans målgrupp.']},
+      {h:'Samverkan i elevhälsan', list:[
+        'Med specialpedagogen, när den pedagogiska och den psykologiska bilden behöver vägas ihop.',
+        'Med skolsköterskan och skolläkaren, i utredningar och vid psykisk ohälsa.',
+        'Med kuratorn, när elevens psykosociala situation påverkar.',
+        'Med rektor, som ansvarar för utredningar av behov av särskilt stöd.']},
+      {h:'Journal och sekretess', p:'Psykologen för journal enligt patientdatalagen. I kommunala skolor gäller hälso- och sjukvårdssekretess enligt 25 kap. 1 § offentlighets- och sekretesslagen.'},
+      {type:'tip', h:'Läs mer', list:[
+        'Skollagen, 2 kap. 25 §.',
+        'Vägledning för elevhälsan, Skolverket och Socialstyrelsen.',
+        '[Granskaren fyller på med material.]']}
+    ],
+    review:['Stämmer beskrivningen av skolpsykologens uppdrag?','Vad ingår och vad ingår inte i ditt arbete, enligt din erfarenhet?','Vad behöver lärare och vårdnadshavare veta om när och hur man tar hjälp av psykologen?','Vad missförstår andra oftast om skolpsykologens roll?']
+  },
+
+  { id:'specialpedagog', title:'Specialpedagog och speciallärare', short:'Specialpedagog', badge:'Sp', tone:'sand',
+    card:'Den specialpedagogiska insatsen: lärande, lärmiljö och stöd.',
+    lead:'Elevhälsans specialpedagogiska insats: kartläggning, anpassningar, särskilt stöd och lärmiljö.',
+    blocks:[
+      {h:'Uppdraget', p:'Specialpedagogen står för elevhälsans specialpedagogiska insats. Fokus ligger på hur lärmiljön kan anpassas så att alla elever kan lära sig, och på stöd till lärare och elever när lärandet går trögt.'},
+      {h:'Specialpedagog eller speciallärare?', p:'Båda har en påbyggnadsutbildning. Specialpedagogen arbetar ofta övergripande med lärmiljö, kartläggning och handledning av lärare. Specialläraren arbetar ofta mer direkt med elever, till exempel inom språk-, skriv- och läsutveckling eller matematik. Hur arbetet fördelas skiljer sig mellan skolor.'},
+      {h:'Extra anpassningar och särskilt stöd', list:[
+        'Extra anpassningar är mindre insatser inom den vanliga undervisningen, till exempel ett tydligt schema, digitala verktyg eller extra genomgångar. De kräver inget formellt beslut.',
+        'Räcker inte extra anpassningar ska rektor se till att elevens behov av särskilt stöd skyndsamt utreds (3 kap. 7 § skollagen).',
+        'Behöver eleven särskilt stöd ska ett åtgärdsprogram utarbetas. Rektor beslutar om åtgärdsprogrammet (3 kap. 9 §).']},
+      {h:'Det här ingår ofta', list:[
+        'Pedagogisk kartläggning av elevens lärande och lärmiljö.',
+        'Stöd i att utforma extra anpassningar och åtgärdsprogram.',
+        'Handledning och konsultation till lärare.',
+        'Arbete med tillgänglig lärmiljö: pedagogisk, social och fysisk.',
+        'Skolnivå: analys av vilka hinder för lärande som återkommer.']},
+      {h:'Vanliga situationer', list:[
+        'En elev har svårt att läsa, skriva eller räkna.',
+        'En elev med NPF behöver en mer förutsägbar skoldag.',
+        'En lärare vill ha hjälp att anpassa undervisningen för en grupp.',
+        'En elev riskerar att inte nå kunskapskraven.']},
+      {h:'Samverkan i elevhälsan', list:[
+        'Med skolpsykologen, när en psykologisk bedömning behövs.',
+        'Med skolsköterskan, när syn, hörsel eller hälsa påverkar lärandet.',
+        'Med kuratorn, när måendet påverkar lärandet.',
+        'Med rektor, som beslutar om särskilt stöd.']},
+      {type:'tip', h:'Läs mer', list:[
+        'Skollagen, 3 kap. om stöd.',
+        'Skolverkets allmänna råd om arbete med extra anpassningar, särskilt stöd och åtgärdsprogram.',
+        'Specialpedagogiska skolmyndigheten (SPSM).',
+        '[Granskaren fyller på med material.]']}
+    ],
+    review:['Stämmer beskrivningen av specialpedagogens och speciallärarens uppdrag?','Är förklaringen av extra anpassningar och särskilt stöd rätt och lätt att förstå?','Vad vill du att lärare och vårdnadshavare ska veta om ditt arbete?','Vad missförstår andra oftast om specialpedagogens roll?']
+  },
+
+  { id:'rektor', title:'Rektor', short:'Rektor', badge:'Re', tone:'sage',
+    card:'Att leda elevhälsoarbetet och de beslut som ligger hos rektor.',
+    lead:'Rektors ansvar för elevhälsan: att leda arbetet, fatta beslut och skapa förutsättningar för teamet.',
+    blocks:[
+      {h:'Uppdraget', p:'Rektor leder och samordnar arbetet på skolenheten, och därmed också elevhälsoarbetet. Huvudmannen ansvarar för att elevhälsan finns, men rektor ser till att den används på rätt sätt: främst förebyggande och hälsofrämjande, och i samverkan med lärarna.'},
+      {h:'Beslut och ansvar som ligger hos rektor', list:[
+        'Att elevens behov av särskilt stöd skyndsamt utreds, och beslut om åtgärdsprogram (3 kap. 7–9 § skollagen).',
+        'Att anmäla kränkande behandling till huvudmannen, när personal har anmält det till rektor (6 kap. 10 §).',
+        'Att upprepad eller längre frånvaro skyndsamt utreds, i samråd med elevhälsan (7 kap. skollagen).',
+        'Skolans arbete med plan mot kränkande behandling och aktiva åtgärder mot diskriminering.',
+        'Att leda elevhälsoteamet och fördela arbetet i det.']},
+      {h:'Att leda elevhälsoteamet', list:[
+        'Se till att teamet har tid för främjande och förebyggande arbete, inte bara för akuta ärenden.',
+        'Ha en tydlig struktur för hur ärenden kommer in, vem som gör vad och när det följs upp.',
+        'Tydliggör ansvarsfördelningen, särskilt för den som är ensam i sitt yrke på skolan.',
+        'Följ upp elevhälsoarbetet i skolans systematiska kvalitetsarbete.']},
+      {h:'Det medicinska och psykologiska', p:'Den medicinska och den psykologiska insatsen är hälso- och sjukvård. De medicinska och psykologiska bedömningarna görs av professionerna själva, och det finns ofta en verksamhetschef för hälso- och sjukvården hos huvudmannen. Rektor ansvarar för att insatserna kan bedrivas på skolan.'},
+      {type:'warn', h:'Bevaka: förslag om ändrade regler för elevhälsan', p:'Regeringen har föreslagit ändringar i reglerna om elevhälsan, bland annat att rektor ska se till att det finns en bemanningsplan för elevhälsan. Förslagen är inte beslutade ännu. [Granskaren fyller i vad som gäller.]'},
+      {h:'Arbetsmiljö för elevhälsans personal', p:'Många i elevhälsan är ensamma i sitt yrke på skolan. Rektor ansvarar för arbetsmiljön, och handledning och nätverk med andra i samma yrke är viktiga för att arbetet ska vara hållbart.'},
+      {type:'tip', h:'Läs mer', list:[
+        'Skollagen, 2 kap. 9–10 § om rektor och 2 kap. 25 § om elevhälsan.',
+        'Skollagen, 3 kap., 6 kap. och 7 kap.',
+        'Vägledning för elevhälsan, Skolverket och Socialstyrelsen.']}
+    ],
+    review:['Stämmer beskrivningen av rektors ansvar för elevhälsan?','Vad behöver en rektor, särskilt en ny rektor, veta om elevhälsan?','Vad är svårast med att leda ett elevhälsoteam?','Vad gäller just nu för förslagen om ändrade regler för elevhälsan?']
+  },
+
+  { id:'vardnadshavare', title:'För vårdnadshavare', short:'Vårdnadshavare', badge:'Vh', tone:'blush',
+    card:'Vad elevhälsan kan hjälpa ditt barn med, och vem du kontaktar.',
+    lead:'Vad elevhälsan är, vad den kan hjälpa ditt barn med och vem du kan kontakta.',
+    blocks:[
+      {h:'Vad är elevhälsan?', p:'På skolan finns en elevhälsa som ska hjälpa ditt barn att må bra och lära sig. I elevhälsan finns skolsköterska, skolläkare, kurator, psykolog och specialpedagog. Rektor leder arbetet. Det kostar ingenting att få hjälp av elevhälsan.'},
+      {h:'Vem kan hjälpa till med vad?', who:[
+        ['Skolsköterskan','Hälsa, hälsobesök, vaccinationer, sömn, mat och om ditt barn ofta har ont någonstans.'],
+        ['Kuratorn','När ditt barn är ledset, har det svårt med kompisar eller när något är jobbigt hemma.'],
+        ['Specialpedagogen','När ditt barn har svårt att lära sig, till exempel att läsa, skriva eller räkna.'],
+        ['Skolpsykologen','När man behöver förstå mer om hur ditt barn tänker, lär sig och mår.'],
+        ['Mentorn','Börja gärna här. Mentorn känner ditt barn i vardagen och kan ta hjälp av elevhälsan.']]},
+      {h:'Hälsobesök och vaccinationer', p:'Ditt barn erbjuds hälsobesök hos skolsköterskan några gånger under skoltiden. Ni får information innan. Skolan erbjuder också vaccinationer enligt det nationella vaccinationsprogrammet. Du får information i förväg och kan tacka nej.'},
+      {h:'Det du berättar stannar i elevhälsan', p:'Elevhälsans personal har sekretess eller tystnadsplikt. Det betyder att de inte berättar för andra om ditt barn utan att du, eller ditt barn när det är tillräckligt gammalt, säger ja. Undantaget är om de blir oroliga för att ett barn far illa. Då måste de berätta det för socialtjänsten.'},
+      {h:'Om ditt barn är borta mycket från skolan', p:'Kontakta mentorn tidigt. Ju tidigare skolan och du hjälps åt, desto lättare är det att hitta en lösning. Elevhälsan kan hjälpa till att förstå varför ditt barn har svårt att komma till skolan.'},
+      {h:'Vanliga frågor om hälsa', list:[
+        'Hudutslag och vanliga barnsjukdomar: läs på 1177.se.',
+        'Huvudlöss och hur man luskammar: läs på 1177.se.',
+        'Sömn, mat och rörelse är viktigt för att orka lära sig i skolan.',
+        'Vid sjukdom: kontakta vårdcentralen eller ring 1177. Vid akut fara: ring 112.']},
+      {h:'Lär ditt barn att ta hand om sig själv', list:[
+        'Tvätta händerna ordentligt.',
+        'Tvätta och plåstra om ett litet sår.',
+        'Ta bort en sticka.',
+        'Klippa naglarna, så att de inte växer in.',
+        '[Bilder och enkla steg läggs till här.]']},
+      {type:'tip', h:'Du har rätt till tolk', p:'Om du inte pratar svenska så bra kan du be skolan om en tolk vid möten. Ditt barn eller ett syskon ska inte behöva tolka.'}
+    ],
+    review:['Är texten lätt att förstå för en vårdnadshavare?','Stämmer det som står om ditt yrke?','Vad behöver vårdnadshavare veta mer om?','Vilka delar behöver bildstöd mest?']
+  }
+];
+
+/* ==========================================================
+   NAVIGERING
+   Varje del har en egen adress, till exempel /#skolskoterska.
+   Den kan skickas direkt till en granskare.
+   ========================================================== */
+const $app = document.getElementById('app');
+const $tabs = document.getElementById('tabs');
+const sec = id => SECTIONS.find(s => s.id === id);
+const current = () => { const h = decodeURIComponent(location.hash.slice(1)); return sec(h) ? h : null; };
+
+function tabsHtml(active){
+  const start = `<a href="#" ${!active ? 'aria-current="page"' : ''}>Start</a>`;
+  return start + SECTIONS.map(s => `<a href="#${s.id}" ${active === s.id ? 'aria-current="page"' : ''}>${esc(s.short)}</a>`).join('');
+}
+
+/* ==========================================================
+   VYER
+   ========================================================== */
+function viewHome(){
+  const grund = sec('grund');
+  const roles = SECTIONS.filter(s => s.id !== 'grund' && s.id !== 'vardnadshavare');
+  const vh = sec('vardnadshavare');
+  const card = (s, cls = '') => `<a class="card${cls}" data-tone="${s.tone}" href="#${s.id}"><span class="badge" aria-hidden="true">${s.badge}</span><span class="t">${esc(s.title)}</span><span class="s">${esc(s.card)}</span></a>`;
+  return `<header class="hero">
+    <svg class="hero-circle" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" style="color:var(--n-accent)" stroke-width="1.6"/><circle cx="97" cy="23" r="8" style="fill:var(--n-terracotta-soft)"/></svg>
+    <p class="hero-for">Elevhälsoguiden, för hela elevhälsan och för vårdnadshavare</p>
+    <h1 class="n-h n-h1">Elevhälsan, del för del</h1>
+    <p class="lead">Vad elevhälsan är, hur den är uppbyggd och vem som gör vad. Välj den del som passar dig.</p>
+  </header>
+  <div class="cards">
+    <a class="card wide featured" href="#grund"><span class="badge" aria-hidden="true">${grund.badge}</span><span class="t">${esc(grund.title)}</span><span class="s">${esc(grund.card)}</span></a>
+  </div>
+  <h2 class="who">Vem är du?</h2>
+  <div class="cards">
+    ${roles.map(s => card(s)).join('')}
+    ${card(vh, ' wide')}
+  </div>
+  <section class="note">
+    <p><strong>Om innehållet.</strong> Elevhälsoguiden ger en överblick och ersätter inte din huvudmans rutiner, medicinsk rådgivning eller juridisk rådgivning.</p>
+    <p class="small" style="margin-top:8px">Källor:</p>
+    <ul class="sources">
+      <li>Skollagen (2010:800), 2 kap. 25 § om elevhälsan, 3 kap. om stöd, 6 kap. om kränkande behandling och 7 kap. om skolplikt och frånvaro.</li>
+      <li>Offentlighets- och sekretesslagen (2009:400), 23 kap. 2 § och 25 kap. 1 §.</li>
+      <li>Socialtjänstlagen (2025:400), 19 kap. 1 § om anmälningsskyldighet.</li>
+      <li>Hälso- och sjukvårdslagen (2017:30) och patientdatalagen (2008:355).</li>
+      <li>Vägledning för elevhälsan, Skolverket och Socialstyrelsen.</li>
+    </ul>
+  </section>`;
+}
+
+function blockHtml(b, i){
+  const cls = b.type ? ` ${b.type}` : '';
+  let body = '';
+  if (b.p) body += `<p>${esc(b.p)}</p>`;
+  if (b.list) body += `<ul>${b.list.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  if (b.steps) body += `<ol>${b.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol>`;
+  if (b.who) body += `<dl class="who-list">${b.who.map(([t, d]) => `<div><dt>${esc(t)}</dt><dd>${esc(d)}</dd></div>`).join('')}</dl>`;
+  if (b.p2) body += `<p style="margin-top:12px">${esc(b.p2)}</p>`;
+  return `<section class="block${cls}" id="b${i}">${b.h ? `<h2>${esc(b.h)}</h2>` : ''}${body}</section>`;
+}
+
+function mailLink(s){
+  const body = `Synpunkter på delen "${s.title}" i Elevhälsoguiden\n\n` +
+    s.review.map((q, i) => `${i + 1}. ${q}\n\n`).join('') +
+    `Övrigt:\n\n\nSkriv inga uppgifter om elever i mejlet.`;
+  return `mailto:${FEEDBACK_MAIL}?subject=${encodeURIComponent('Synpunkter: Elevhälsoguiden – ' + s.title)}&body=${encodeURIComponent(body)}`;
+}
+
+function reviewHtml(s){
+  return `<section class="review" aria-labelledby="rv-h">
+    <h2 id="rv-h">Till dig som granskar</h2>
+    <p>Tack för att du hjälper till! Läs igenom delen och svara gärna på frågorna:</p>
+    <ol>${s.review.map(q => `<li>${esc(q)}</li>`).join('')}</ol>
+    <p class="small">Knappen öppnar ett mejl med frågorna ifyllda. Skriv inga uppgifter om elever.</p>
+    <div class="actions" style="margin-top:12px"><a class="n-btn" href="${mailLink(s)}">Skicka synpunkter</a></div>
+  </section>`;
+}
+
+function viewSec(id){
+  const s = sec(id);
+  const heads = s.blocks.map((b, i) => [b.h, i]).filter(([h]) => h);
+  return `<header class="sec-head" data-tone="${s.tone}"><span class="badge" aria-hidden="true">${s.badge}</span><h1 class="n-h n-h2">${esc(s.title)}</h1><p class="lead" style="margin:0">${esc(s.lead)}</p></header>
+  ${heads.length > 4 ? `<nav class="toc" aria-label="På den här sidan">${heads.map(([h, i]) => `<button data-jump="${i}">${esc(h)}</button>`).join('')}</nav>` : ''}
+  <div class="blocks">${s.blocks.map(blockHtml).join('')}</div>
+  ${reviewHtml(s)}`;
+}
+
+function render(){
+  const id = current();
+  $tabs.innerHTML = tabsHtml(id);
+  $app.innerHTML = id ? viewSec(id) : viewHome();
+  document.title = (id ? sec(id).title + ' – ' : '') + 'Elevhälsoguiden – utkast | Norvay';
+  const active = $tabs.querySelector('[aria-current="page"]');
+  if (active && active.scrollIntoView) active.scrollIntoView({block:'nearest', inline:'center'});
+}
+
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+$app.addEventListener('click', e => {
+  const b = e.target.closest('[data-jump]');
+  if (!b) return;
+  const el = document.getElementById('b' + b.dataset.jump);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+/* ---------- Nattläge (samma som på Norvay) ---------- */
+const MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+const themeBtn = document.getElementById('themeBtn');
+/* Sparar valet i kakan "norvay-tema" för alla Norvays verktyg (ett år). Bara ordet light eller dark. */
+function sparaTema(t){
+  const doman = /(^|\.)norvayapp\.se$/.test(location.hostname) ? '; domain=.norvayapp.se' : '';
+  const saker = location.protocol === 'https:' ? '; secure' : '';
+  document.cookie = 'norvay-tema=' + t + '; path=/; max-age=31536000; samesite=lax' + saker + doman;
+}
+function paintThemeBtn(){
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  themeBtn.innerHTML = dark ? SUN : MOON;
+  themeBtn.setAttribute('aria-label', dark ? 'Byt till ljust läge' : 'Byt till mörkt läge');
+  themeBtn.setAttribute('aria-pressed', String(dark));
+}
+themeBtn.addEventListener('click', () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  sparaTema(next);
+  paintThemeBtn();
+});
+paintThemeBtn();
+
+render();
+</script>
+</body>
+</html>
