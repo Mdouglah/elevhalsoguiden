@@ -98,8 +98,9 @@ a{color:inherit}
 .draft strong{color:var(--n-terracotta)}
 
 /* Flikarna längst upp */
-.tabs{display:flex;gap:8px;overflow-x:auto;padding:16px 0 6px;margin:0 -20px;padding-left:20px;padding-right:20px;scrollbar-width:thin}
-.tabs a{flex:none;font-size:.92rem;font-weight:500;text-decoration:none;color:var(--n-ink);background:var(--n-surface);border:1px solid var(--n-line);border-radius:999px;padding:8px 16px;min-height:40px;display:inline-flex;align-items:center;white-space:nowrap}
+/* Flikarna radbryts i stället för att skrollas, så att alla syns på en gång */
+.tabs{display:flex;flex-wrap:wrap;gap:5px;padding:14px 0 4px}
+.tabs a{font-size:.78rem;font-weight:500;line-height:1.2;text-decoration:none;color:var(--n-ink);background:var(--n-surface);border:1px solid var(--n-line);border-radius:999px;padding:6px 10px;min-height:34px;display:inline-flex;align-items:center;white-space:nowrap}
 .tabs a:hover{border-color:var(--n-accent)}
 .tabs a[aria-current="page"]{background:var(--n-accent);border-color:var(--n-accent);color:var(--n-on-accent)}
 
@@ -148,6 +149,40 @@ a{color:inherit}
 .who-list dt{font-weight:600}
 .who-list dd{margin:2px 0 0;max-width:64ch;color:var(--n-ink-soft)}
 
+/* Elevhälsoplanen */
+.plan-entry{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:14px;background:var(--n-accent);color:var(--n-on-accent);border-radius:var(--n-radius);padding:20px 22px;text-decoration:none}
+.plan-entry:hover{background:var(--n-ink);color:var(--n-bg)}
+.plan-entry .t{font-family:var(--n-font-display);font-size:1.4rem;line-height:1.2}
+.plan-entry .s{font-size:.95rem;opacity:.92}
+.privacy{font-size:.92rem;background:var(--n-warn-bg);border-radius:var(--n-radius-sm);padding:10px 14px;margin:14px 0}
+.progress{display:flex;gap:5px;margin:16px 0 6px}
+.progress a{flex:1;height:8px;border-radius:999px;background:var(--n-line)}
+.progress a.on{background:var(--n-accent)}
+.progress a.here{outline:2px solid var(--n-accent);outline-offset:2px}
+.steplist{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:8px}
+.steplist a{display:flex;align-items:center;gap:12px;text-decoration:none;background:var(--n-surface);border:1px solid var(--n-line);border-radius:var(--n-radius-sm);padding:12px 16px}
+.steplist a:hover{border-color:var(--n-accent)}
+.steplist .num{width:28px;height:28px;flex:none;border-radius:50%;display:inline-grid;place-items:center;font-size:.85rem;font-weight:600;border:1.5px solid var(--n-line)}
+.steplist .done .num{background:var(--n-accent);border-color:var(--n-accent);color:var(--n-on-accent)}
+.steplist .lbl{flex:1}
+.steplist .st{font-size:.85rem;color:var(--n-ink-soft)}
+.form{display:grid;gap:16px;margin-top:16px}
+.form label{font-weight:600;display:block;margin-bottom:4px}
+.form .hint{font-weight:400;font-size:.88rem;color:var(--n-ink-soft);display:block}
+.form input,.form textarea{width:100%;font:inherit;padding:11px 14px;border:1.5px solid var(--n-line);border-radius:var(--n-radius-sm);background:var(--n-surface);color:var(--n-ink)}
+.form textarea{min-height:5.5rem;resize:vertical;line-height:1.55}
+.form input:focus,.form textarea:focus{border-color:var(--n-accent);outline:none}
+.fgroup{background:var(--t-bg,var(--n-tint));border-radius:var(--n-radius);padding:18px 20px;display:grid;gap:12px}
+.fgroup h3{font-family:var(--n-font-display);font-weight:400;font-size:1.25rem;margin:0}
+.fgroup .gh{font-size:.9rem;color:var(--n-ink-soft);margin:-6px 0 0}
+.saved{color:var(--n-accent);font-weight:600;font-size:.92rem;min-height:1.4em}
+.plan-out{background:var(--n-surface);border:1px solid var(--n-line);border-radius:var(--n-radius);padding:24px;margin-top:18px}
+.plan-out h2{font-family:var(--n-font-display);font-weight:400;font-size:1.35rem;margin:22px 0 8px;padding-top:14px;border-top:1px solid var(--n-line)}
+.plan-out h2:first-of-type{margin-top:0;padding-top:0;border-top:0}
+.plan-out h3{font-size:1rem;margin:12px 0 2px}
+.plan-out p{margin:0 0 6px;white-space:pre-wrap;max-width:66ch}
+.plan-out .empty{color:var(--n-ink-soft);font-style:italic}
+
 /* Granskning */
 .review{margin-top:22px;background:var(--n-surface);border:2px dashed var(--n-accent);border-radius:var(--n-radius);padding:22px 24px}
 .review h2{font-family:var(--n-font-display);font-weight:400;font-size:1.35rem;margin:0 0 8px}
@@ -173,21 +208,22 @@ a{color:inherit}
 @media (prefers-reduced-motion:reduce){ .n-body *{transition:none!important;animation:none!important} }
 @media print{
   :root,:root[data-theme="dark"]{--n-bg:#fff;--n-surface:#fff;--n-ink:#000;--n-ink-soft:#333;--n-line:#ccc;--n-tint:#eee;--n-accent:#000;--n-on-accent:#fff;--n-warn-bg:#fff}
-  .n-theme,.tabs,.actions,.toc,.n-footer,.review,.no-print{display:none!important}
+  .n-theme,.tabs,.actions,.toc,.n-footer,.review,.no-print,.draft,.progress,.privacy{display:none!important}
+  .plan-out{border:0;padding:0}
   .block{break-inside:avoid}
 }
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="2e81b730-fb1d-4183-9323-de51c8949318" data-tag="elevhalsoguiden" data-do-not-track="true"></script>
 </head>
 <body class="n-body">
-<div class="norvay-bar"><a class="norvay-bar-back" href="https://norvayapp.se/#verktyg">← Alla verktyg</a><span class="norvay-bar-right"><a class="norvay-bar-brand" href="https://norvayapp.se/" aria-label="Norvay startsida"><span class="norvay-bar-mark">N</span><span>NORVAY</span></a><a class="norvay-bar-stod" href="https://norvayapp.se/#stod" target="_blank" rel="noopener" aria-label="Stöd Norvay (öppnas i ny flik)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.760 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span>Stöd Norvay</span></a><button class="n-theme" id="themeBtn" type="button"></button></span></div>
+<div class="norvay-bar"><a class="norvay-bar-back" href="https://norvayapp.se/#verktyg">← Alla verktyg</a><span class="norvay-bar-right"><a class="norvay-bar-brand" href="https://norvayapp.se/" aria-label="Norvay startsida"><span class="norvay-bar-mark">N</span><span>NORVAY</span></a><a class="norvay-bar-stod" href="https://norvayapp.se/#stod" target="_blank" rel="noopener" aria-label="Stöd Norvay (öppnas i ny flik)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span>Stöd Norvay</span></a><button class="n-theme" id="themeBtn" type="button"></button></span></div>
 
 <div class="wrap">
   <p class="draft" role="note"><strong>Utkast under granskning.</strong> Texterna granskas just nu av personer från varje yrke i elevhälsan och kan innehålla fel. Använd dem inte som underlag ännu.</p>
   <nav class="tabs" id="tabs" aria-label="Delar i Elevhälsoguiden"></nav>
   <main id="app"></main>
   <footer class="n-footer">
-    <p>Elevhälsoguiden sparar ingenting av det du gör. Ingen AI används. Vi räknar bara anonyma besök, utan kakor.</p>
+    <p>Elevhälsoplanen sparas bara i den här webbläsaren, och inget av det du skriver skickas till oss. Ingen AI används. Vi räknar bara anonyma besök, utan kakor.</p>
     <p>Elevhälsoguiden ger en överblick och ersätter inte din huvudmans rutiner, medicinsk rådgivning eller juridisk rådgivning.</p>
     <p>Ett verktyg från <a href="https://norvayapp.se">Norvay</a> · <a href="https://norvayapp.se/integritet">Integritet</a> · <a href="mailto:kontakt@norvayapp.se">kontakt@norvayapp.se</a>. Skicka aldrig elevuppgifter via mejl.</p>
   </footer>
@@ -244,7 +280,7 @@ const SECTIONS = [
         'Vägledning för elevhälsan, Skolverket och Socialstyrelsen.',
         'Offentlighets- och sekretesslagen (2009:400).']}
     ],
-    review:['Stämmer beskrivningen av elevhälsan och hur den är uppbyggd?','Är "Vem gör vad?" och "Vart vänder man sig?" rätt och tydligt?','Vad saknas i grunden som alla borde veta om elevhälsan?']
+    review:['Stämmer beskrivningen av elevhälsan och hur den är uppbyggd?','Är "Vem gör vad?" och "Vart vänder man sig?" rätt och tydligt?','Vad saknas i grunden som alla borde veta om elevhälsan?','Är stegen i Gör en elevhälsoplan till hjälp? Saknas något steg?']
   },
 
   { id:'kurator', title:'Skolkurator', short:'Kurator', badge:'Ku', tone:'dimma',
@@ -443,6 +479,133 @@ const SECTIONS = [
 ];
 
 /* ==========================================================
+   ELEVHÄLSOPLANEN
+   En del av Om elevhälsan. Planen sparas bara i webbläsaren.
+   Adresser: /#plan (översikt), /#plan-1 … /#plan-8 (steg), /#plan-klar (färdig plan).
+   ========================================================== */
+const PSTORE = 'elevhalsoguiden-plan';
+const TYPER = [
+  ['framjande','Hälsofrämjande','Stärker det som gör att alla elever mår bra och lär sig.','sage'],
+  ['forebyggande','Förebyggande','Minskar risker innan problem uppstår.','sand'],
+  ['atgardande','Åtgärdande','Insatser när svårigheter redan finns.','blush']];
+const NIVAER = [['skola','Skolnivå'],['grupp','Gruppnivå'],['individ','Individnivå']];
+const PSTEPS = [
+  { h:'Om planen', help:'Börja med det praktiska. Planen gäller skolan och grupper av elever, inte enskilda elever.',
+    fields:[['skola','Skola',''],['lasar','Läsår','Till exempel 2026/27'],['deltagare','Vilka är med i arbetet med planen?','Skriv yrken, till exempel rektor, kurator, skolsköterska och lärare, inte namn på elever.','area']]},
+  { h:'Nuläge', help:'Utgå från det som fungerar, och var ärliga med var tiden går i dag.',
+    fields:[['fungerar','Vad fungerar bra i elevhälsoarbetet i dag?','','area'],['tid','Vad lägger elevhälsan mest tid på i dag?','Till exempel akuta ärenden, möten eller utredningar.','area'],['onskan','Vad skulle ni vilja lägga mer tid på?','','area']]},
+  { h:'Vad vi gör i dag', grid:true, help:'Skriv exempel på det ni redan gör, på varje nivå. Det är okej att lämna rutor tomma, det visar också något.',
+    fields:[['balans','Var ligger det mesta av arbetet i dag, och var vill ni att det ska ligga?','Elevhälsan ska främst arbeta hälsofrämjande och förebyggande.','area']]},
+  { h:'Behov', help:'Titta på det ni redan vet om skolan, innan ni bestämmer vad ni ska satsa på.',
+    fields:[['underlag','Vilka underlag har ni?','Till exempel trivselenkäter, frånvaro, kunskapsresultat, hälsosamtal och elevernas egna synpunkter.','area'],['visar','Vad visar underlagen? Vilka mönster ser ni?','','area'],['styrkor','Vilka styrkor och friskfaktorer finns på skolan?','Till exempel trygga relationer, bra rutiner eller engagerade lärare.','area']]},
+  { h:'Prioritera', help:'Välj hellre få områden än många. Ett till tre utvecklingsområden räcker för ett läsår.',
+    fields:[['omrade1','Utvecklingsområde 1',''],['omrade2','Utvecklingsområde 2','Valfritt'],['omrade3','Utvecklingsområde 3','Valfritt']]},
+  { h:'Mål och insatser', goals:true, help:'Gör varje område konkret: vad ska bli annorlunda, vad gör ni, vem ansvarar och när.' },
+  { h:'Strukturer', help:'Möten, rutiner och årshjul gör att arbetet blir av, även när vardagen är stressig.',
+    fields:[['moten','När och hur ofta träffas elevhälsoteamet, och hur är mötena upplagda?','','area'],['tidigt','Hur kommer elevhälsan in tidigt, innan svårigheterna blir stora?','','area'],['larare','Hur samverkar elevhälsan med lärare och övrig personal?','','area'],['arshjul','Vad ska finnas med i ert årshjul?','Till exempel enkäter, hälsobesök, uppföljningar och planering.','area']]},
+  { h:'Uppföljning', help:'Bestäm redan nu hur ni ska veta om arbetet gör skillnad.',
+    fields:[['foljupp_nar','När följer ni upp planen?','Till exempel vid terminsslut.'],['foljupp_hur','Hur vet ni om insatserna gör skillnad?','','area'],['elever','Hur får eleverna säga sitt om arbetet?','','area']]}
+];
+const GOAL_FIELDS = [['mal','Mål: vad ska bli annorlunda?','area'],['insats','Insatser: vad ska ni göra?','area'],['niva','Nivå','Skola, grupp eller individ'],['ansvar','Vem ansvarar?','Skriv yrke eller funktion'],['nar','När ska det vara klart, och när följer ni upp?','']];
+
+let PLAN = {};
+let canSave = true;
+try { PLAN = JSON.parse(localStorage.getItem(PSTORE)) || {}; } catch(e) { PLAN = {}; }
+function savePlan(){
+  PLAN.uppdaterad = new Date().toISOString();
+  try { localStorage.setItem(PSTORE, JSON.stringify(PLAN)); canSave = true; }
+  catch(e) { canSave = false; }
+  const m = document.getElementById('savemsg');
+  if (m) m.textContent = canSave ? 'Sparat i den här webbläsaren.' : 'Det gick inte att spara i den här webbläsaren. Skriv ut planen innan du stänger sidan.';
+}
+const val = k => (PLAN[k] || '').trim();
+const areaName = i => val('omrade' + i) || `Utvecklingsområde ${i}`;
+function stepKeys(i){
+  const st = PSTEPS[i];
+  let keys = (st.fields || []).map(f => f[0]);
+  if (st.grid) TYPER.forEach(([t]) => NIVAER.forEach(([n]) => keys.push(`${t}_${n}`)));
+  if (st.goals) [1,2,3].forEach(a => GOAL_FIELDS.forEach(([k]) => keys.push(`mal${a}_${k}`)));
+  return keys;
+}
+const stepDone = i => stepKeys(i).some(k => val(k));
+const hasPlan = () => PSTEPS.some((_, i) => stepDone(i));
+
+const planPrivacy = () => `<p class="privacy">Skriv inga namn på elever eller andra uppgifter som kan peka ut en elev. Planen sparas bara i den här webbläsaren, på den här datorn. Dela den med teamet genom att skriva ut den eller spara den som PDF.</p>`;
+const planBack = () => `<div class="actions no-print" style="margin-top:10px"><a class="n-btn n-btn--ghost" href="#grund">← Tillbaka till Om elevhälsan</a></div>`;
+
+function viewPlanHome(){
+  const first = PSTEPS.findIndex((_, i) => !stepDone(i));
+  const next = first < 0 ? 1 : first + 1;
+  return `<header class="sec-head" data-tone="sage"><span class="badge" aria-hidden="true">Pl</span><h1 class="n-h n-h2">Gör en elevhälsoplan</h1>
+    <p class="lead" style="margin:0">Ett stöd för elevhälsoteamet att tillsammans planera ett arbete som främst är hälsofrämjande och förebyggande. Gå igenom stegen i lugn och ro, gärna under flera möten.</p></header>
+  ${planPrivacy()}
+  <div class="actions" style="margin-top:6px">
+    <a class="n-btn" href="#plan-${next}">${hasPlan() ? 'Fortsätt där ni slutade' : 'Börja med steg 1'}</a>
+    ${hasPlan() ? `<a class="n-btn n-btn--ghost" href="#plan-klar">Se hela planen</a>` : ''}
+  </div>
+  <ol class="steplist">
+    ${PSTEPS.map((st, i) => `<li><a href="#plan-${i + 1}" class="${stepDone(i) ? 'done' : ''}"><span class="num">${stepDone(i) ? '✓' : i + 1}</span><span class="lbl">${esc(st.h)}</span><span class="st">${stepDone(i) ? 'Påbörjat' : 'Inte påbörjat'}</span></a></li>`).join('')}
+    <li><a href="#plan-klar"><span class="num">${PSTEPS.length + 1}</span><span class="lbl">Färdig plan</span><span class="st">Skriv ut</span></a></li>
+  </ol>
+  <section class="note" style="margin-top:22px">
+    <p><strong>Vill ni fördjupa er?</strong> Specialpedagogiska skolmyndigheten (SPSM) har ett kostnadsfritt stöd för att utveckla elevhälsoarbetet, bland annat handledningen Det lilla ordet främst med reflektionsunderlag för teamet. <a href="https://www.spsm.se/utveckla-elevhalsoarbete" target="_blank" rel="noopener">Läs mer hos SPSM</a></p>
+    <p class="small">Elevhälsoplanen i Elevhälsoguiden är inte framtagen av SPSM.</p>
+  </section>
+  ${hasPlan() ? `<div class="actions no-print"><button class="n-btn n-btn--ghost" data-act="pclear">Ta bort planen</button></div>` : ''}
+  ${planBack()}`;
+}
+
+function fieldHtml(k, label, hint, type){
+  const id = 'f-' + k;
+  const input = type === 'area'
+    ? `<textarea id="${id}" data-pk="${k}">${esc(PLAN[k] || '')}</textarea>`
+    : `<input id="${id}" data-pk="${k}" value="${esc(PLAN[k] || '')}" autocomplete="off">`;
+  return `<div><label for="${id}">${esc(label)}${hint ? `<span class="hint">${esc(hint)}</span>` : ''}</label>${input}</div>`;
+}
+
+function viewPlanStep(n){
+  const i = n - 1, st = PSTEPS[i], total = PSTEPS.length + 1;
+  let body = '';
+  if (st.grid) body += TYPER.map(([t, name, desc, tone]) => `<section class="fgroup" data-tone="${tone}"><h3>${esc(name)}</h3><p class="gh">${esc(desc)}</p>
+    ${NIVAER.map(([nv, nname]) => fieldHtml(`${t}_${nv}`, nname, '', 'area')).join('')}</section>`).join('');
+  if (st.goals) body += [1,2,3].filter(a => a === 1 || val('omrade' + a)).map(a => `<section class="fgroup" data-tone="${['sage','sand','lila'][a - 1]}"><h3>${esc(areaName(a))}</h3>
+    ${GOAL_FIELDS.map(([k, label, hint]) => fieldHtml(`mal${a}_${k}`, label, k === 'mal' || k === 'insats' ? '' : hint, k === 'mal' || k === 'insats' ? 'area' : 'text')).join('')}</section>`).join('')
+    + (!val('omrade1') ? `<p class="small">Tips: skriv era utvecklingsområden i steg 5, så får varje område en egen ruta här.</p>` : '');
+  if (st.fields) body += st.fields.map(([k, label, hint, type]) => fieldHtml(k, label, hint, type)).join('');
+  return `<header class="sec-head" data-tone="sage" style="padding-bottom:18px"><p class="small" style="margin:0 0 4px">Gör en elevhälsoplan · Steg ${n} av ${total}</p><h1 class="n-h n-h2" style="margin-bottom:6px">${esc(st.h)}</h1><p style="margin:0">${esc(st.help)}</p></header>
+  <nav class="progress" aria-label="Steg i planen">${PSTEPS.map((_, j) => `<a href="#plan-${j + 1}" class="${stepDone(j) ? 'on' : ''} ${j === i ? 'here' : ''}" aria-label="Steg ${j + 1}: ${esc(PSTEPS[j].h)}" ${j === i ? 'aria-current="step"' : ''}></a>`).join('')}<a href="#plan-klar" aria-label="Färdig plan"></a></nav>
+  ${planPrivacy()}
+  <div class="form">${body}</div>
+  <p class="saved" id="savemsg" role="status"></p>
+  <div class="actions">
+    ${n > 1 ? `<a class="n-btn n-btn--ghost" href="#plan-${n - 1}">Föregående steg</a>` : ''}
+    ${n < PSTEPS.length ? `<a class="n-btn" href="#plan-${n + 1}">Nästa steg</a>` : `<a class="n-btn" href="#plan-klar">Se hela planen</a>`}
+    <a class="n-btn n-btn--ghost" href="#plan">Översikt</a>
+  </div>`;
+}
+
+function outField(label, k){ return `<h3>${esc(label)}</h3>${val(k) ? `<p>${esc(val(k))}</p>` : `<p class="empty">Inte ifyllt</p>`}`; }
+function viewPlanDone(){
+  if (!hasPlan()) return `<header class="sec-head" data-tone="sage"><h1 class="n-h n-h2">Färdig plan</h1><p class="lead" style="margin:0">Ni har inte fyllt i något ännu.</p></header>
+    <div class="actions"><a class="n-btn" href="#plan-1">Börja med steg 1</a><a class="n-btn n-btn--ghost" href="#plan">Översikt</a></div>`;
+  const updated = PLAN.uppdaterad ? new Date(PLAN.uppdaterad).toLocaleDateString('sv-SE') : '';
+  const sections = PSTEPS.map((st, i) => {
+    let out = `<h2>${i + 1}. ${esc(st.h)}</h2>`;
+    if (st.grid) out += TYPER.map(([t, name]) => `<h3>${esc(name)}</h3>` + NIVAER.map(([nv, nname]) => val(`${t}_${nv}`) ? `<p><strong>${esc(nname)}:</strong> ${esc(val(`${t}_${nv}`))}</p>` : '').join('') + (NIVAER.some(([nv]) => val(`${t}_${nv}`)) ? '' : `<p class="empty">Inte ifyllt</p>`)).join('');
+    if (st.goals) out += [1,2,3].filter(a => a === 1 || val('omrade' + a)).map(a => `<h3>${esc(areaName(a))}</h3>` + GOAL_FIELDS.map(([k, label]) => val(`mal${a}_${k}`) ? `<p><strong>${esc(label)}</strong> ${esc(val(`mal${a}_${k}`))}</p>` : '').join('') + (GOAL_FIELDS.some(([k]) => val(`mal${a}_${k}`)) ? '' : `<p class="empty">Inte ifyllt</p>`)).join('');
+    if (st.fields) out += st.fields.map(([k, label]) => outField(label, k)).join('');
+    return out;
+  }).join('');
+  return `<header class="sec-head" data-tone="sage"><h1 class="n-h n-h2">Elevhälsoplan${val('skola') ? ' – ' + esc(val('skola')) : ''}</h1>
+    <p class="lead" style="margin:0">${val('lasar') ? 'Läsår ' + esc(val('lasar')) + '. ' : ''}${updated ? 'Senast ändrad ' + esc(updated) + '.' : ''}</p></header>
+  <div class="actions no-print"><button class="n-btn" data-act="pprint">Skriv ut eller spara som PDF</button><a class="n-btn n-btn--ghost" href="#plan">Ändra i planen</a></div>
+  <article class="plan-out">${sections}</article>
+  <div class="actions no-print"><button class="n-btn n-btn--ghost" data-act="pclear">Ta bort planen</button></div>`;
+}
+
+const PLAN_ROUTES = h => h === 'plan' || h === 'plan-klar' || /^plan-[1-9]$/.test(h) && +h.slice(5) <= PSTEPS.length;
+
+/* ==========================================================
    NAVIGERING
    Varje del har en egen adress, till exempel /#skolskoterska.
    Den kan skickas direkt till en granskare.
@@ -450,7 +613,8 @@ const SECTIONS = [
 const $app = document.getElementById('app');
 const $tabs = document.getElementById('tabs');
 const sec = id => SECTIONS.find(s => s.id === id);
-const current = () => { const h = decodeURIComponent(location.hash.slice(1)); return sec(h) ? h : null; };
+const hashNow = () => decodeURIComponent(location.hash.slice(1));
+const current = () => { const h = hashNow(); return sec(h) ? h : null; };
 
 function tabsHtml(active){
   const start = `<a href="#" ${!active ? 'aria-current="page"' : ''}>Start</a>`;
@@ -524,26 +688,45 @@ function viewSec(id){
   const s = sec(id);
   const heads = s.blocks.map((b, i) => [b.h, i]).filter(([h]) => h);
   return `<header class="sec-head" data-tone="${s.tone}"><span class="badge" aria-hidden="true">${s.badge}</span><h1 class="n-h n-h2">${esc(s.title)}</h1><p class="lead" style="margin:0">${esc(s.lead)}</p></header>
+  ${id === 'grund' ? `<a class="plan-entry" href="#plan"><span class="t">Gör en elevhälsoplan</span><span class="s">Ett stöd steg för steg för elevhälsoteamet att planera ett arbete som främst är hälsofrämjande och förebyggande.${hasPlan() ? ' Er påbörjade plan finns sparad.' : ''}</span></a>` : ''}
   ${heads.length > 4 ? `<nav class="toc" aria-label="På den här sidan">${heads.map(([h, i]) => `<button data-jump="${i}">${esc(h)}</button>`).join('')}</nav>` : ''}
   <div class="blocks">${s.blocks.map(blockHtml).join('')}</div>
   ${reviewHtml(s)}`;
 }
 
 function render(){
+  const h = hashNow();
+  if (PLAN_ROUTES(h)) {
+    /* Planen är en del av Om elevhälsan, så den fliken visas som vald */
+    $tabs.innerHTML = tabsHtml('grund');
+    $app.innerHTML = h === 'plan' ? viewPlanHome() : h === 'plan-klar' ? viewPlanDone() : viewPlanStep(+h.slice(5));
+    document.title = 'Gör en elevhälsoplan – Elevhälsoguiden – utkast | Norvay';
+    return;
+  }
   const id = current();
   $tabs.innerHTML = tabsHtml(id);
   $app.innerHTML = id ? viewSec(id) : viewHome();
   document.title = (id ? sec(id).title + ' – ' : '') + 'Elevhälsoguiden – utkast | Norvay';
-  const active = $tabs.querySelector('[aria-current="page"]');
-  if (active && active.scrollIntoView) active.scrollIntoView({block:'nearest', inline:'center'});
 }
 
 window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
 $app.addEventListener('click', e => {
-  const b = e.target.closest('[data-jump]');
+  const j = e.target.closest('[data-jump]');
+  if (j) { const el = document.getElementById('b' + j.dataset.jump); if (el) el.scrollIntoView({behavior:'smooth', block:'start'}); return; }
+  const b = e.target.closest('[data-act]');
   if (!b) return;
-  const el = document.getElementById('b' + b.dataset.jump);
-  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  if (b.dataset.act === 'pprint') window.print();
+  if (b.dataset.act === 'pclear' && confirm('Vill ni ta bort hela elevhälsoplanen från den här webbläsaren? Det går inte att ångra.')) {
+    PLAN = {}; try { localStorage.removeItem(PSTORE); } catch(err) {}
+    location.hash = 'plan'; render();
+  }
+});
+/* Planen sparas medan man skriver */
+$app.addEventListener('input', e => {
+  const k = e.target.dataset && e.target.dataset.pk;
+  if (!k) return;
+  PLAN[k] = e.target.value;
+  savePlan();
 });
 
 /* ---------- Nattläge (samma som på Norvay) ---------- */
